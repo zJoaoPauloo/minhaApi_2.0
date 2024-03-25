@@ -4,7 +4,7 @@ const minhaApi = express();
 minhaApi.use(express.json());
 
 const Sequelize = require ('sequelize');
-
+// Conexão com banco de dados
 const conexao = new Sequelize('nodejs' , 'root', 'root', {
     host: 'localhost',
     dialect: 'mysql'
@@ -17,7 +17,7 @@ conexao.authenticate()
     }).catch((erro)=>{
         console.log('deu erro', erro);
     });
-
+ //Criar tabela cargos
 const Cargo = conexao.define('cargos',{
     codigo:{
         type: Sequelize.INTEGER,
@@ -33,9 +33,9 @@ const Cargo = conexao.define('cargos',{
 });
 
 
-//++++++++++++++++++++++++++++++++ usuario
+//                   funcionarios               //
 
-
+//Criar tabela funconario
 const funcionario = conexao.define('funcionario',{
     codigo:{
         type: Sequelize.INTEGER,
@@ -73,7 +73,7 @@ conexao.sync()
         console.log('Erro ao sincronizar tabelas', erro);
     });
 
-// Rota para consulta de todos os usuários
+// Rota para consulta de todos os funcionarios
 minhaApi.get('/funcionario', async (req, res) => {
         const funcionarios = await funcionario.findAll();
         res.send(funcionarios);
@@ -81,7 +81,7 @@ minhaApi.get('/funcionario', async (req, res) => {
 
 
 
-// Rota para consulta de um usuário pelo código
+// Rota para consulta de um funcionario pelo código
 minhaApi.get('/funcionario/:id', async (req, res) => {
     const id = parseInt(req.params.id);
     const novoFuncionario = await funcionario.findByPk(id);
@@ -101,7 +101,7 @@ minhaApi.post('/funcionario', async (req, res) => {
     res.send("funcionario cadastrado com sucesso");
 });
 
-// Rota para atualização de um usuário pelo código
+// Rota para atualização de um funcionario pelo código
 minhaApi.put('/funcionario/:id',async (req, res) => {
     const id = parseInt(req.params.id);
     const novoFuncionario = await funcionario.findByPk(id);
@@ -114,7 +114,7 @@ minhaApi.put('/funcionario/:id',async (req, res) => {
     res.send(novoFuncionario);
 });
 
-// Rota para remoção de um usuário pelo código
+// Rota para remoção de um funcionario pelo código
 minhaApi.delete('/funcionario/:id', async (req, res) => {
     const id = parseInt(req.params.id);
     const novoFuncionario = await funcionario.findByPk(id);
@@ -122,9 +122,9 @@ minhaApi.delete('/funcionario/:id', async (req, res) => {
     res.send("O funcionario foi apagado com sucesso");
 });
  
-//                                      
+//                                   //   
 //                 Cargos            //
-//
+//                                   //
 
 
 // Rota para consulta de todos os cargos
@@ -159,6 +159,7 @@ minhaApi.delete('/cargos/:codigo', async (req, res) => {
     const codigo = parseInt(req.params.codigo);
     const novoCargo = await Cargo.findByPk(codigo);
     novoCargo.destroy();
+    res.send("O cargo foi apagado com sucesso");
 });
  
 // Rota para consulta de um cargo pelo código
